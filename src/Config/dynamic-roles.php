@@ -7,6 +7,7 @@ return [
     |--------------------------------------------------------------------------
     */
     'table_names' => [
+        'users' => 'users',
         'roles' => 'roles',
         'permissions' => 'permissions',
         'role_permission' => 'role_permission',

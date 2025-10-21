@@ -8,10 +8,25 @@ use sndpbag\DynamicRoles\Models\Role;
 
 class UserRoleController extends Controller
 {
+    /**
+     * The User model class name.
+     *
+     * @var string
+     */
+    protected $userModel;
+
+    /**
+     * Create a new controller instance.
+     */
+    public function __construct()
+    {
+        // Load the User model from the config only once
+        $this->userModel = config('dynamic-roles.user_model', \App\Models\User::class);
+    }
+
     public function index()
     {
-        $userModel = config('dynamic-roles.user_model', \App\Models\User::class);
-        $users = $userModel::with('roles')->paginate(15);
+        $users = $this->userModel::with('roles')->paginate(15);
         $roles = Role::all();
         
         return view('dynamic-roles::users.index', compact('users', 'roles'));
@@ -19,13 +34,15 @@ class UserRoleController extends Controller
 
     public function assignRole(Request $request)
     {
+        // Get the users table name directly from the User model
+        $userTable = (new $this->userModel)->getTable();
+
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => "required|exists:{$userTable},id",
             'role_id' => 'required|exists:' . config('dynamic-roles.table_names.roles', 'roles') . ',id',
         ]);
 
-        $userModel = config('dynamic-roles.user_model', \App\Models\User::class);
-        $user = $userModel::findOrFail($request->user_id);
+        $user = $this->userModel::findOrFail($request->user_id);
         
         $user->assignRole($request->role_id);
 
@@ -34,13 +51,14 @@ class UserRoleController extends Controller
 
     public function removeRole(Request $request)
     {
+        $userTable = (new $this->userModel)->getTable();
+
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => "required|exists:{$userTable},id",
             'role_id' => 'required|exists:' . config('dynamic-roles.table_names.roles', 'roles') . ',id',
         ]);
 
-        $userModel = config('dynamic-roles.user_model', \App\Models\User::class);
-        $user = $userModel::findOrFail($request->user_id);
+        $user = $this->userModel::findOrFail($request->user_id);
         
         $user->removeRole($request->role_id);
 
@@ -49,14 +67,15 @@ class UserRoleController extends Controller
 
     public function syncRoles(Request $request)
     {
+        $userTable = (new $this->userModel)->getTable();
+
         $request->validate([
-            'user_id' => 'required|exists:users,id',
+            'user_id' => "required|exists:{$userTable},id",
             'roles' => 'array',
             'roles.*' => 'exists:' . config('dynamic-roles.table_names.roles', 'roles') . ',id',
         ]);
 
-        $userModel = config('dynamic-roles.user_model', \App\Models\User::class);
-        $user = $userModel::findOrFail($request->user_id);
+        $user = $this->userModel::findOrFail($request->user_id);
         
         $user->syncRoles($request->roles ?? []);
 

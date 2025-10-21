@@ -19,13 +19,13 @@ class DynamicRolesServiceProvider extends ServiceProvider
     public function boot(Router $router)
     {
         // Load migrations
-        $this->loadMigrationsFrom(__DIR__ . '/../Database/Migrations');
+        $this->loadMigrationsFrom(__DIR__ . '/../../Database');
 
         // Load routes
-        $this->loadRoutesFrom(__DIR__ . '/../Routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../../Routes/web.php');
 
         // Load views
-        $this->loadViewsFrom(__DIR__ . '/../Views', 'dynamic-roles');
+        $this->loadViewsFrom(__DIR__ . '/../../resources/Views', 'dynamic-roles');
 
         // Publish config
         $this->publishes([
@@ -34,12 +34,12 @@ class DynamicRolesServiceProvider extends ServiceProvider
 
         // Publish views
         $this->publishes([
-            __DIR__ . '/../Views' => resource_path('views/vendor/dynamic-roles'),
+            __DIR__ . '/../../resources/Views' => resource_path('views/vendor/dynamic-roles'),
         ], 'dynamic-roles-views');
 
         // Publish migrations
         $this->publishes([
-            __DIR__ . '/../Database/Migrations' => database_path('migrations'),
+            __DIR__ . '/../../Database' => database_path('migrations'),
         ], 'dynamic-roles-migrations');
 
         // Register middleware
