@@ -1,8 +1,8 @@
 # Changelog
 
-All notable changes to `laravel-dynamic-roles` will be documented in this file.
+All notable changes to `laravel-roles-packege` will be documented in this file.
 
-## [1.0.0] - 2024-10-21
+## [1.0.0] - 2025-10-21
 
 ### Added
 - Initial release
