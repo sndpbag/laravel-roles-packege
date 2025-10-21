@@ -62,7 +62,18 @@ trait HasRolesAndPermissions
         return true;
     }
 
-    public function assignRole(...$roles)
+    // public function assignRole(...$roles)
+    // {
+    //     $roles = $this->getAllRoles($roles);
+    //     if ($roles->isEmpty()) {
+    //         return $this;
+    //     }
+
+    //     $this->roles()->syncWithoutDetaching($roles);
+    //     return $this;
+    // }
+
+        public function assignRole(...$roles)
     {
         $roles = $this->getAllRoles($roles);
         if ($roles->isEmpty()) {
@@ -70,45 +81,95 @@ trait HasRolesAndPermissions
         }
 
         $this->roles()->syncWithoutDetaching($roles);
+        $this->clearPermissionsCache(); // ক্যাশ ক্লিয়ার করুন
+
         return $this;
     }
 
-    public function removeRole(...$roles)
+
+    // public function removeRole(...$roles)
+    // {
+    //     $roles = $this->getAllRoles($roles);
+    //     $this->roles()->detach($roles);
+    //     return $this;
+    // }
+
+        public function removeRole(...$roles)
     {
         $roles = $this->getAllRoles($roles);
         $this->roles()->detach($roles);
+        $this->clearPermissionsCache(); // ক্যাশ ক্লিয়ার করুন
+
         return $this;
     }
 
-    public function syncRoles(...$roles)
+
+    // public function syncRoles(...$roles)
+    // {
+    //     $roles = $this->getAllRoles($roles);
+    //     $this->roles()->sync($roles);
+    //     return $this;
+    // }
+
+        public function syncRoles(...$roles)
     {
         $roles = $this->getAllRoles($roles);
         $this->roles()->sync($roles);
+        $this->clearPermissionsCache(); // ক্যাশ ক্লিয়ার করুন
+
         return $this;
     }
 
+    // public function hasPermission($permission)
+    // {
+    //     // Check if user is super admin
+    //     if ($this->isSuperAdmin()) {
+    //         return true;
+    //     }
+
+    //     if (is_string($permission)) {
+    //         return $this->hasPermissionViaRole($permission);
+    //     }
+
+    //     if (is_array($permission)) {
+    //         foreach ($permission as $p) {
+    //             if ($this->hasPermission($p)) {
+    //                 return true;
+    //             }
+    //         }
+    //         return false;
+    //     }
+
+    //     return $this->hasPermissionViaRole($permission);
+    // }
+
     public function hasPermission($permission)
     {
-        // Check if user is super admin
+        // Super admin-এর জন্য ক্যাশ চেক করার দরকার নেই
         if ($this->isSuperAdmin()) {
             return true;
         }
+        
+        // ব্যবহারকারীর সমস্ত পারমিশন (ক্যাশ থেকে) পান
+        $permissions = $this->getAllPermissionsFromCache();
 
         if (is_string($permission)) {
-            return $this->hasPermissionViaRole($permission);
+            return $permissions->contains('slug', $permission);
         }
 
         if (is_array($permission)) {
             foreach ($permission as $p) {
-                if ($this->hasPermission($p)) {
+                if ($permissions->contains('slug', $p)) {
                     return true;
                 }
             }
             return false;
         }
-
-        return $this->hasPermissionViaRole($permission);
+        
+        return false;
     }
+
+
 
     public function hasAnyPermission($permissions)
     {
@@ -123,6 +184,26 @@ trait HasRolesAndPermissions
             }
         }
         return true;
+    }
+
+    protected function getAllPermissionsFromCache()
+    {
+        $cacheKey = 'permissions_for_user_' . $this->id;
+        $cacheDuration = config('dynamic-roles.cache_duration', 60); // config থেকে সময় নিন (ডিফল্ট ৬০ মিনিট)
+
+        return Cache::remember($cacheKey, $cacheDuration, function () {
+            // যদি ক্যাশে না থাকে, ডেটাবেস থেকে আনুন
+            $permissions = collect();
+            foreach ($this->roles()->with('permissions')->get() as $role) {
+                $permissions = $permissions->merge($role->permissions);
+            }
+            return $permissions->unique('id');
+        });
+    }
+
+    public function clearPermissionsCache()
+    {
+        Cache::forget('permissions_for_user_' . $this->id);
     }
 
     protected function hasPermissionViaRole($permission)
