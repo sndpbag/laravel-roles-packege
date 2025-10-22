@@ -34,7 +34,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "sndpbag\\DynamicRoles\\Providers\\DynamicRolesServiceProvider"
+                "Sndpbag\\DynamicRoles\\Providers\\DynamicRolesServiceProvider"
             ]
         }
     },

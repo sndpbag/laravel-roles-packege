@@ -42,6 +42,10 @@ A comprehensive and easy-to-use Laravel package for managing roles and permissio
 composer require sndpbag/laravel-dynamic-roles
 ```
 
+```bash
+   composer require sndpbag/laravel-dynamic-roles:dev-main
+```
+
 ### Step 2: Run Installation Command
 
 ```bash
