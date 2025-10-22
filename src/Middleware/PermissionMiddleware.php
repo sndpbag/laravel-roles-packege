@@ -1,6 +1,6 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Middleware;
+namespace Sndpbag\DynamicRoles\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;

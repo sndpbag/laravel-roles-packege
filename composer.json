@@ -1,7 +1,7 @@
 {
     "name": "sndpbag/laravel-dynamic-roles",
     "description": "Dynamic Role and Permission Management Package for Laravel",
-    "keywords": ["laravel", "roles", "permissions", "rbac", "dynamic"],
+    "keywords": ["laravel", "roles", "permissions", "rbac", "dynamic","sndpbag"],
     "version": "1.0.0",
     "type": "library",
     "license": "MIT",
@@ -23,12 +23,12 @@
     },
     "autoload": {
         "psr-4": {
-            "sndpbag\\DynamicRoles\\": "src/"
+            "Sndpbag\\DynamicRoles\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "sndpbag\\DynamicRoles\\Tests\\": "tests/"
+            "Sndpbag\\DynamicRoles\\Tests\\": "tests/"
         }
     },
     "extra": {

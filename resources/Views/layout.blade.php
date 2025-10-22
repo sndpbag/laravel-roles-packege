@@ -16,6 +16,8 @@
                         <h1 class="text-xl font-bold text-gray-800">Roles & Permissions</h1>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+                        @hasAnyRole(['super-admin', 'admin'])
+
                         <a href="{{ route('dynamic-roles.roles.index') }}" 
                            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Roles
@@ -28,6 +30,15 @@
                            class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
                             Users
                         </a>
+
+                        @endhasAnyRole
+
+                         @hasPermission('products.index')
+        <a href="{{ route('products.index') }}" 
+           class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
+            Products
+        </a>
+    @endhasPermission 
                     </div>
                 </div>
             </div>

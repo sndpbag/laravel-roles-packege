@@ -1,6 +1,6 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Models;
+namespace Sndpbag\DynamicRoles\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;

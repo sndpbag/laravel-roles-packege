@@ -1,10 +1,10 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Commands;
+namespace Sndpbag\DynamicRoles\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Route;
-use sndpbag\DynamicRoles\Models\Permission;
+use Sndpbag\DynamicRoles\Models\Permission;
 use Illuminate\Support\Str;
 
 class SyncRoutesCommand extends Command
@@ -36,7 +36,8 @@ class SyncRoutesCommand extends Command
                 ['route_name' => $routeName],
                 [
                     'name' => $name,
-                    'slug' => Str::slug($routeName),
+                    // 'slug' => Str::slug($routeName),
+                    'slug' => $routeName,
                     'group' => $group,
                     'http_method' => implode('|', $route->methods()),
                     'http_uri' => $route->uri(),

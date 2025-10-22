@@ -2,11 +2,13 @@
 
 A comprehensive and easy-to-use Laravel package for managing roles and permissions dynamically. This package automatically syncs your application routes to permissions and provides a beautiful admin interface for managing roles, permissions, and user assignments.
 
-## Features
+ ## Features
 
 - ✅ **Dynamic Permission Management** - Automatically sync all your routes to permissions
 - ✅ **Role-Based Access Control (RBAC)** - Create and manage roles with ease
+- ✅ **Role Hierarchy** - Supports parent-child relationships between roles
 - ✅ **User Role Assignment** - Assign multiple roles to users
+- ✅ **Direct User Permissions** - Assign permissions directly to users, bypassing roles
 - ✅ **Beautiful Admin UI** - Pre-built Tailwind CSS interface
 - ✅ **Middleware Support** - Protect routes with role and permission middleware
 - ✅ **Flexible Configuration** - Customize everything via config file
@@ -207,6 +209,27 @@ if ($role->hasPermission('users.create')) {
 }
 ```
 
+
+#### Managing User Permissions  
+
+You can also assign permissions directly to a user.
+
+```php
+$user = User::find(1);
+
+// Give direct permission to user
+$user->givePermissionTo('posts.create');
+
+// Give multiple direct permissions
+$user->givePermissionTo('posts.create', 'posts.edit');
+
+// Revoke direct permission
+$user->revokePermissionTo('posts.edit');
+
+// Sync direct permissions (removes all other direct permissions)
+$user->syncPermissions('posts.create', 'posts.delete');
+
+
 ### Syncing Routes to Permissions
 
 Automatically sync all your application routes to permissions:
@@ -241,10 +264,12 @@ Configuration options in `config/dynamic-roles.php`:
 return [
     // Customize table names
     'table_names' => [
+       'users' => 'users',
         'roles' => 'roles',
         'permissions' => 'permissions',
         'role_permission' => 'role_permission',
         'user_role' => 'user_role',
+        'user_permission' => 'user_permission',
     ],
 
     // Your User model
@@ -254,24 +279,28 @@ return [
     'route_prefix' => 'admin/roles-permissions',
 
     // Middleware for admin routes
-    'middleware' => ['web', 'auth'],
+    'middleware' => ['web', 'auth','role:super-admin'],
 
     // Super admin role slug
     'super_admin_role' => 'super-admin',
 
     // Routes to exclude from permission sync
     'exclude_routes' => [
-        'login',
+      'login',
         'logout',
         'register',
         'password.*',
+        'sanctum.*',
+        '_ignition.*',
     ],
 
     // Permission groups for organization
     'permission_groups' => [
-        'users' => 'User Management',
+      'users' => 'User Management',
         'roles' => 'Role Management',
         'permissions' => 'Permission Management',
+        'posts' => 'Post Management',
+        'categories' => 'Category Management',
     ],
 ];
 ```
@@ -288,12 +317,13 @@ Views will be published to `resources/views/vendor/dynamic-roles/`
 
 ## Database Structure
 
-The package creates four tables:
+The package creates five tables:
 
-- `roles` - Stores roles
+- `roles` - Stores roles (includes `parent_id` for hierarchy)
 - `permissions` - Stores permissions
 - `role_permission` - Pivot table for role-permission relationships
 - `user_role` - Pivot table for user-role relationships
+- `user_permission` - Pivot table for user-direct-permission relationships
 
 ## Example Workflow
 
@@ -307,10 +337,10 @@ The package creates four tables:
 
 ## Security
 
-- Super admin role has access to everything by default
-- Permissions are checked via roles (users don't have direct permissions)
-- Middleware protects routes automatically
-- All database queries use Eloquent relationships
+- Super admin role has access to everything by default.
+- Permissions are checked via roles *and* direct user assignments.
+- Middleware protects routes automatically.
+- All database queries use Eloquent relationships.
 
 ## Testing
 
@@ -324,7 +354,7 @@ MIT License. See [LICENSE](LICENSE) for more information.
 
 ## Credits
 
-- **Author**: Your Name
+- **Author**: sndp bag (sandipan kr bag)
 - **GitHub**: [https://github.com/sndpbag/laravel-roles-packege.git](https://github.com/sndpbag/laravel-roles-packege.git)
 
 ## Support

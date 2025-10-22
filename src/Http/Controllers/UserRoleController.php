@@ -1,11 +1,11 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Http\Controllers;
+namespace Sndpbag\DynamicRoles\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use sndpbag\DynamicRoles\Models\Role;
-use sndpbag\DynamicRoles\Models\Permission;
+use Sndpbag\DynamicRoles\Models\Role;
+use Sndpbag\DynamicRoles\Models\Permission;
 use App\Models\User;
 
 class UserRoleController extends Controller

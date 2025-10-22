@@ -1,11 +1,12 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Http\Controllers;
+namespace Sndpbag\DynamicRoles\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use sndpbag\DynamicRoles\Models\Role;
-use sndpbag\DynamicRoles\Models\Permission;
+use Sndpbag\DynamicRoles\Models\Role;
+use Sndpbag\DynamicRoles\Models\Permission;
 
 class RoleController extends Controller
 {
@@ -110,6 +111,10 @@ class RoleController extends Controller
         } else {
             $role->syncPermissions([]); // Kono permission select na thakle shob remove korun
         }
+
+    
+
+    User::all()->each->clearPermissionsCache();
 
         return redirect()->route('dynamic-roles.roles.index')
             ->with('success', 'Role updated successfully');

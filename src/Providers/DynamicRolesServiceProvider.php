@@ -1,14 +1,14 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Providers;
+namespace Sndpbag\DynamicRoles\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Blade;
-use sndpbag\DynamicRoles\Middleware\RoleMiddleware;
-use sndpbag\DynamicRoles\Middleware\PermissionMiddleware;
-use sndpbag\DynamicRoles\Commands\InstallCommand;
-use sndpbag\DynamicRoles\Commands\SyncRoutesCommand;
+use Sndpbag\DynamicRoles\Middleware\RoleMiddleware;
+use Sndpbag\DynamicRoles\Middleware\PermissionMiddleware;
+use Sndpbag\DynamicRoles\Commands\InstallCommand;
+use Sndpbag\DynamicRoles\Commands\SyncRoutesCommand;
 
 class DynamicRolesServiceProvider extends ServiceProvider
 {
@@ -54,6 +54,7 @@ class DynamicRolesServiceProvider extends ServiceProvider
                 SyncRoutesCommand::class,
             ]);
         }
+        $this->registerBladeDirectives();
     }
 
     /**

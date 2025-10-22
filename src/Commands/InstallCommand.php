@@ -1,6 +1,6 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Commands;
+namespace Sndpbag\DynamicRoles\Commands;
 
 use Illuminate\Console\Command;
 use sndpbag\DynamicRoles\Models\Role;
