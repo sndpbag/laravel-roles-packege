@@ -1,3 +1,16 @@
+<p align="center">
+  <a href="https://packagist.org/packages/sndpbag/laravel-dynamic-roles">
+    <img src="https://img.shields.io/packagist/v/sndpbag/laravel-dynamic-roles" alt="Latest Stable Version">
+  </a>
+  <a href="https://packagist.org/packages/sndpbag/laravel-dynamic-roles">
+    <img src="https://img.shields.io/packagist/dt/sndpbag/laravel-dynamic-roles" alt="Total Downloads">
+  </a>
+  <a href="https://github.com/sndpbag/laravel-dynamic-roles/blob/main/LICENSE">
+    <img src="https://img.shields.io/github/license/sndpbag/laravel-dynamic-roles" alt="License">
+  </a>
+</p>
+
+
 # Laravel Dynamic Roles & Permissions
 
 A comprehensive and easy-to-use Laravel package for managing roles and permissions dynamically. This package automatically syncs your application routes to permissions and provides a beautiful admin interface for managing roles, permissions, and user assignments.
