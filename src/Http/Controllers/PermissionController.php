@@ -1,6 +1,6 @@
 <?php
 
-namespace sndpbag\DynamicRoles\Controllers;
+namespace sndpbag\DynamicRoles\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;

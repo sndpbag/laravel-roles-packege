@@ -8,7 +8,7 @@
     <form action="{{ route('dynamic-roles.roles.store') }}" method="POST" class="p-6">
         @csrf
         
-        <div class="grid grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Role Name</label>
                 <input type="text" 
@@ -29,7 +29,21 @@
                        placeholder="Auto-generated if left empty">
             </div>
 
-            <div>
+            <div class="md:col-span-2">
+                <label for="parent_id" class="block text-sm font-medium text-gray-700">Parent Role (Optional)</label>
+                <select name="parent_id" 
+                        id="parent_id"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="">No Parent</option>
+                    @foreach($roles as $role)
+                        <option value="{{ $role->id }}" {{ old('parent_id') == $role->id ? 'selected' : '' }}>
+                            {{ $role->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="md:col-span-2">
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <textarea name="description" 
                           id="description" 
@@ -37,7 +51,8 @@
                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('description') }}</textarea>
             </div>
 
-            <div class="flex items-center">
+            <div class="md:col-span-2 flex items-center">
+                <input type="hidden" name="is_active" value="0">
                 <input type="checkbox" 
                        name="is_active" 
                        id="is_active" 

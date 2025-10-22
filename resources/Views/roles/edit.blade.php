@@ -9,7 +9,7 @@
         @csrf
         @method('PUT')
         
-        <div class="grid grid-cols-1 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
                 <label for="name" class="block text-sm font-medium text-gray-700">Role Name</label>
                 <input type="text" 
@@ -29,7 +29,21 @@
                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
             </div>
 
-            <div>
+            <div class="md:col-span-2">
+                <label for="parent_id" class="block text-sm font-medium text-gray-700">Parent Role (Optional)</label>
+                <select name="parent_id" 
+                        id="parent_id"
+                        class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="">No Parent</option>
+                    @foreach($roles as $parentRole)
+                        <option value="{{ $parentRole->id }}" {{ old('parent_id', $role->parent_id) == $parentRole->id ? 'selected' : '' }}>
+                            {{ $parentRole->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="md:col-span-2">
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                 <textarea name="description" 
                           id="description" 
@@ -37,7 +51,8 @@
                           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">{{ old('description', $role->description) }}</textarea>
             </div>
 
-            <div class="flex items-center">
+            <div class="md:col-span-2 flex items-center">
+                <input type="hidden" name="is_active" value="0">
                 <input type="checkbox" 
                        name="is_active" 
                        id="is_active" 
@@ -47,7 +62,7 @@
                 <label for="is_active" class="ml-2 block text-sm text-gray-900">Active</label>
             </div>
 
-            <div class="border-t pt-6">
+            <div class="border-t pt-6 md:col-span-2">
                 <h3 class="text-lg font-medium text-gray-900 mb-4">Assign Permissions</h3>
                 
                 @foreach($permissions as $group => $groupPermissions)

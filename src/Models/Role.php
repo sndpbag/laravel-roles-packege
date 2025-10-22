@@ -4,6 +4,7 @@ namespace sndpbag\DynamicRoles\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Illuminate\Support\Collection;
 
 class Role extends Model
 {
@@ -12,6 +13,7 @@ class Role extends Model
         'slug',
         'description',
         'is_active',
+        'parent_id',
     ];
 
     protected $casts = [
@@ -27,7 +29,6 @@ class Role extends Model
     protected static function boot()
     {
         parent::boot();
-
         static::creating(function ($role) {
             if (empty($role->slug)) {
                 $role->slug = Str::slug($role->name);
@@ -35,6 +36,18 @@ class Role extends Model
         });
     }
 
+    // Role Hierarchy Relationships
+    public function parent()
+    {
+        return $this->belongsTo(static::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(static::class, 'parent_id');
+    }
+
+    // Permissions of this role only
     public function permissions()
     {
         return $this->belongsToMany(
@@ -43,6 +56,24 @@ class Role extends Model
             'role_id',
             'permission_id'
         );
+    }
+
+    /**
+     * Get all permissions of the role, including inherited ones from parents.
+     */
+    public function getAllPermissions(): Collection
+    {
+        $permissions = $this->permissions;
+        if ($this->parent) {
+            $permissions = $permissions->merge($this->parent->getAllPermissions());
+        }
+        return $permissions->unique('id');
+    }
+    
+    public function hasPermission($permission): bool
+    {
+        $permissionSlug = is_string($permission) ? $permission : $permission->slug;
+        return $this->getAllPermissions()->contains('slug', $permissionSlug);
     }
 
     public function users()
@@ -56,51 +87,38 @@ class Role extends Model
         );
     }
 
-    public function hasPermission($permission)
-    {
-        if (is_string($permission)) {
-            return $this->permissions->contains('slug', $permission);
-        }
-
-        return $this->permissions->contains($permission);
-    }
-
     public function givePermissionTo(...$permissions)
     {
-        $permissions = $this->getAllPermissions($permissions);
-        if ($permissions->isEmpty()) {
-            return $this;
-        }
-
+        $permissions = $this->getPermissionModels($permissions);
+        if ($permissions->isEmpty()) return $this;
         $this->permissions()->syncWithoutDetaching($permissions);
         return $this;
     }
 
     public function revokePermissionTo(...$permissions)
     {
-        $permissions = $this->getAllPermissions($permissions);
+        $permissions = $this->getPermissionModels($permissions);
         $this->permissions()->detach($permissions);
         return $this;
     }
 
     public function syncPermissions(...$permissions)
     {
-        $permissions = $this->getAllPermissions($permissions);
+        $permissions = $this->getPermissionModels($permissions);
         $this->permissions()->sync($permissions);
         return $this;
     }
 
-    protected function getAllPermissions($permissions)
+    protected function getPermissionModels($permissions): Collection
     {
         return collect($permissions)
             ->flatten()
             ->map(function ($permission) {
-                if ($permission instanceof Permission) {
-                    return $permission;
-                }
+                if ($permission instanceof Permission) return $permission;
                 return Permission::where('slug', $permission)->orWhere('id', $permission)->first();
             })
             ->filter()
             ->unique('id');
     }
 }
+

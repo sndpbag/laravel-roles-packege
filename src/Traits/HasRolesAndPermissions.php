@@ -1,9 +1,10 @@
 <?php
 
 namespace sndpbag\DynamicRoles\Traits;
-
+use Illuminate\Support\Collection;
 use sndpbag\DynamicRoles\Models\Role;
 use sndpbag\DynamicRoles\Models\Permission;
+use Illuminate\Support\Facades\Cache; 
 
 trait HasRolesAndPermissions
 {
@@ -14,6 +15,16 @@ trait HasRolesAndPermissions
             config('dynamic-roles.table_names.user_role', 'user_role'),
             'user_id',
             'role_id'
+        );
+    }
+
+        public function directPermissions()
+    {
+        return $this->belongsToMany(
+            Permission::class,
+            config('dynamic-roles.table_names.user_permission', 'user_permission'),
+            'user_id',
+            'permission_id'
         );
     }
 
