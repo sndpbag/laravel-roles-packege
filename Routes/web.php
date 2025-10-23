@@ -1,9 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use sndpbag\DynamicRoles\Http\Controllers\RoleController;
-use sndpbag\DynamicRoles\Http\Controllers\PermissionController;
-use sndpbag\DynamicRoles\Http\Controllers\UserRoleController;
+use Sndpbag\DynamicRoles\Http\Controllers\RoleController;
+use Sndpbag\DynamicRoles\Http\Controllers\PermissionController;
+use Sndpbag\DynamicRoles\Http\Controllers\UserRoleController;
 
 Route::prefix(config('dynamic-roles.route_prefix', 'admin/roles-permissions'))
     ->middleware(config('dynamic-roles.middleware', ['web', 'auth']))

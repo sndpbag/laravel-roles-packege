@@ -32,7 +32,7 @@ A comprehensive and easy-to-use Laravel package for managing roles and permissio
 ## Requirements
 
 - PHP 8.1+
-- Laravel 10.x or 11.x
+- Laravel 11.x or 12.x
 
 ## Installation
 

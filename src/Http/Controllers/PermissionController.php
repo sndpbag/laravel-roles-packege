@@ -4,7 +4,7 @@ namespace Sndpbag\DynamicRoles\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use sndpbag\DynamicRoles\Models\Permission;
+use Sndpbag\DynamicRoles\Models\Permission;
 
 class PermissionController extends Controller
 {
@@ -22,9 +22,12 @@ class PermissionController extends Controller
 
     public function store(Request $request)
     {
+        $tableName = config('dynamic-roles.table_names.permissions', 'permissions');
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:permissions,slug',
+            // 'slug' => 'nullable|string|max:255|unique:permissions,slug',
+            'slug' => "nullable|string|max:255|unique:{$tableName},slug",
             'group' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
@@ -44,9 +47,12 @@ class PermissionController extends Controller
 
     public function update(Request $request, Permission $permission)
     {
+        $tableName = config('dynamic-roles.table_names.permissions', 'permissions');
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:permissions,slug,' . $permission->id,
+            // 'slug' => 'nullable|string|max:255|unique:permissions,slug,' . $permission->id,
+            'slug' => "nullable|string|max:255|unique:{$tableName},slug," . $permission->id,
             'group' => 'required|string|max:255',
             'description' => 'nullable|string',
             'is_active' => 'boolean',
