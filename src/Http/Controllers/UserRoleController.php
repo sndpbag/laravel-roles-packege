@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
 use Sndpbag\DynamicRoles\Models\Role;
 use Sndpbag\DynamicRoles\Models\Permission;
-use App\Models\User;
+
 
 class UserRoleController extends Controller
 {
@@ -23,7 +23,7 @@ class UserRoleController extends Controller
     public function __construct()
     {
         // Load the User model from the config only once
-        $this->userModel = config('dynamic-roles.user_model',User::class);
+        $this->userModel = config('dynamic-roles.user_model', '\App\Models\User');
     }
 
      public function index()

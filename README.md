@@ -69,7 +69,7 @@ Add the `HasRolesAndPermissions` trait to your `User` model:
 namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use sndpbag\DynamicRoles\Traits\HasRolesAndPermissions;
+use Sndpbag\DynamicRoles\Traits\HasRolesAndPermissions;
 
 class User extends Authenticatable
 {
